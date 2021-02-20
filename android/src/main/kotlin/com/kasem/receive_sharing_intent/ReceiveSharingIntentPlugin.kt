@@ -151,7 +151,7 @@ class ReceiveSharingIntentPlugin : FlutterPlugin, ActivityAware, MethodCallHandl
 
         return when (intent.action) {
             Intent.ACTION_SEND -> {
-                val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+                val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM) ?: return null
                 val path = FileDirectory.getAbsolutePath(applicationContext, uri)
                 if (path != null) {
                     val type = getMediaType(path)
@@ -213,7 +213,7 @@ class ReceiveSharingIntentPlugin : FlutterPlugin, ActivityAware, MethodCallHandl
         if (type != MediaType.VIDEO) return null // get duration for video only
         val retriever = MediaMetadataRetriever()
         retriever.setDataSource(path)
-        val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLongOrNull()
+        val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull()
         retriever.release()
         return duration
     }
